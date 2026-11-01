@@ -1,3 +1,10 @@
+# Check for Administrator privileges and self-elevate via UAC if not already admin
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host "Administrator privileges required. Prompting for UAC..." -ForegroundColor Yellow
+    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"irm https://raw.githubusercontent.com/ElBulbol/spiectify_windows_fix/main/script.ps1 | iex`"" -Verb RunAs
+    exit
+}
+
 # Define directory and file paths
 $dir = "C:\script"
 $url = "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/master/MAS/Separate-Files-Version/Activators/TSforge_Activation.cmd"
