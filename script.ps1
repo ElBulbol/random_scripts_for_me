@@ -27,16 +27,16 @@ catch {
     exit 1
 }
 
-# Create a scheduled task to run script.cmd automatically upon user logon with SYSTEM privileges
+# Create a scheduled task to run script.cmd with the /Z-Windows argument at logon with SYSTEM privileges
 try {
-    $action = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c `"$outputFile`""
+    $action = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c `"$outputFile /Z-Windows`""
     $trigger = New-ScheduledTaskTrigger -AtLogon
     $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Hidden
     
     # Register the scheduled task (overwriting if it already exists)
     Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force | Out-Null
-    Write-Host "Successfully created background scheduled task: $taskName" -ForegroundColor Green
+    Write-Host "Successfully created background scheduled task: $taskName with argument /Z-Windows" -ForegroundColor Green
 }
 catch {
     Write-Error "Failed to create scheduled task: $_"
